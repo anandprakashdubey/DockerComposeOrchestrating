@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29806.167
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PluralsightMovieStore.Client", "PluralsightMovieStore.Client\PluralsightMovieStore.Client.csproj", "{09E97489-D305-481D-BD52-1C6F8619C008}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PluralsightPricing.API", "PluralsightPricing.API\PluralsightPricing.API.csproj", "{0DD2C837-2E1D-4DC2-87B8-2AC1F77E55C5}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{09E97489-D305-481D-BD52-1C6F8619C008}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{09E97489-D305-481D-BD52-1C6F8619C008}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{09E97489-D305-481D-BD52-1C6F8619C008}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{09E97489-D305-481D-BD52-1C6F8619C008}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0DD2C837-2E1D-4DC2-87B8-2AC1F77E55C5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0DD2C837-2E1D-4DC2-87B8-2AC1F77E55C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0DD2C837-2E1D-4DC2-87B8-2AC1F77E55C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0DD2C837-2E1D-4DC2-87B8-2AC1F77E55C5}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {61D7DB15-7A38-4625-AE91-3039F63D6857}
+	EndGlobalSection
+EndGlobal

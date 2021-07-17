@@ -1,0 +1,15 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<div class="text-left">
+    <h3>Response from PluralsightPricing API</h3>
+    <ul>
+        @foreach (var name in Model.Names)
+        {
+            <li>@name</li>
+        }
+    </ul>
+</div>
