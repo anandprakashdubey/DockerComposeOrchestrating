@@ -1,0 +1,16 @@
+version: '3.4'
+
+services:
+  pluralsightmoviestore.client:
+    image: ${DOCKER_REGISTRY-}pluralsightmoviestoreclient
+    build:
+      context: .
+      dockerfile: PluralsightMovieStore.Client/Dockerfile
+    depends_on: 
+        - "pluralsightpricing.api"
+  pluralsightpricing.api:
+    image: ${DOCKER_REGISTRY-}pluralsightpricingapi
+    build:
+      context: .
+      dockerfile: PluralsightPricing.API/Dockerfile
+

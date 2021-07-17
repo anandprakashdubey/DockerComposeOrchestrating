@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29806.167
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PluralsightMovieStore.Client", "PluralsightMovieStore.Client\PluralsightMovieStore.Client.csproj", "{09E97489-D305-481D-BD52-1C6F8619C008}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PluralsightMovieStore.Client", "PluralsightMovieStore.Client\PluralsightMovieStore.Client.csproj", "{09E97489-D305-481D-BD52-1C6F8619C008}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PluralsightPricing.API", "PluralsightPricing.API\PluralsightPricing.API.csproj", "{0DD2C837-2E1D-4DC2-87B8-2AC1F77E55C5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PluralsightPricing.API", "PluralsightPricing.API\PluralsightPricing.API.csproj", "{0DD2C837-2E1D-4DC2-87B8-2AC1F77E55C5}"
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{6687E692-CE25-42F1-9716-3AF9A57DDFEA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{0DD2C837-2E1D-4DC2-87B8-2AC1F77E55C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0DD2C837-2E1D-4DC2-87B8-2AC1F77E55C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0DD2C837-2E1D-4DC2-87B8-2AC1F77E55C5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6687E692-CE25-42F1-9716-3AF9A57DDFEA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6687E692-CE25-42F1-9716-3AF9A57DDFEA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6687E692-CE25-42F1-9716-3AF9A57DDFEA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6687E692-CE25-42F1-9716-3AF9A57DDFEA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

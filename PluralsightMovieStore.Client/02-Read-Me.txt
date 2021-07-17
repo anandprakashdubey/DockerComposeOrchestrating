@@ -1,0 +1,63 @@
+﻿When Application solution has more than one project and UI application depends on APIs. So we need to make sure our API is working and started before our UI application.
+
+To enable this kind of functionality we need to add docker orchestration support.
+
+For this functionality, right click on each project and click on "Container Orchestrator Support" and it will add one project "Docker Compose" and this project has all the relevant
+information of each api and ui projects.
+
+We need to select Docker Compose during add for Container Orchestrator Support.
+
+After adding on every project, initial version of docker-compose.yml file of DockerCompose project will be look like this - 
+
+version: '3.4'
+
+services:
+  pluralsightmoviestore.client:
+    image: ${DOCKER_REGISTRY-}pluralsightmoviestoreclient
+    build:
+      context: .
+      dockerfile: PluralsightMovieStore.Client/Dockerfile
+
+  pluralsightpricing.api:
+    image: ${DOCKER_REGISTRY-}pluralsightpricingapi
+    build:
+      context: .
+      dockerfile: PluralsightPricing.API/Dockerfile
+
+
+
+But API wont work now because, each project is working from its own container, api address got changed. To test run the application with docker compose and see, check the up containers
+also via docker ps
+
+We have added the depends-on attribute in docker-compose.yml file under docker-compose project for UI so docker knows that UI application depends on API project
+
+version: '3.4'
+
+services:
+  pluralsightmoviestore.client:
+    image: ${DOCKER_REGISTRY-}pluralsightmoviestoreclient
+    build:
+      context: .
+      dockerfile: PluralsightMovieStore.Client/Dockerfile
+    depends_on: 
+        - "pluralsightpricing.api"
+  pluralsightpricing.api:
+    image: ${DOCKER_REGISTRY-}pluralsightpricingapi
+    build:
+      context: .
+      dockerfile: PluralsightPricing.API/Dockerfile
+
+
+Add that depends-on prop value to UI app setting api attribute. check the application, it working 
+
+
+From ui app setting ---> "PricingApiUri": "http://pluralsightpricing.api/",
+
+
+
+Now each application is working in its own container and communicating with each other.
+
+
+We customise the ports details also of docker-compose.yml file add "ports" same as depends-on tag.
+
+See the change history for more details
