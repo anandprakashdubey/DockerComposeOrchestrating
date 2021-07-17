@@ -6,7 +6,8 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting; 
+using Microsoft.Extensions.Hosting;
+using Polly;
 
 namespace PluralsightMovieStore.Client
 {
@@ -25,6 +26,10 @@ namespace PluralsightMovieStore.Client
             services.AddHttpClient("PricingApiClient", client =>
             {
                 client.BaseAddress = new Uri(Configuration["PricingApiUri"]);
+            }).AddTransientHttpErrorPolicy(builder =>
+            {
+                return builder.RetryAsync(retryCount: 3);
+
             });
 
             services.AddRazorPages();

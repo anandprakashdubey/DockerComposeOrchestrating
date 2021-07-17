@@ -1,0 +1,25 @@
+﻿In Microservice architecutre, when application solution has multiple project like UI, APIs
+
+Then each application supposed to run inside its own container.
+
+And also we need to make sure, before UI application, APIs are working or not.
+
+All these facilities we can achieve through Docker Compose and Orchestrating the Solution.
+
+Lets say if in microservice archietecture, if api call fail then it may lead to bad data or application fail. so we need to introduce some type retry or fallback functionality
+
+For this we can user "POLLY" package, there is a package of Microsoft which developed on top of "POLLY" named as  - "Microsoft.Extensions.Http.Polly (3.1.3)"
+
+Then add polly code where we have registered api service in UI startup file - refer startup file.
+
+			services.AddHttpClient("PricingApiClient", client =>
+            {
+                client.BaseAddress = new Uri(Configuration["PricingApiUri"]);
+            }).AddTransientHttpErrorPolicy(builder =>
+            {
+                return builder.RetryAsync(retryCount: 3);
+
+            });
+
+
+
