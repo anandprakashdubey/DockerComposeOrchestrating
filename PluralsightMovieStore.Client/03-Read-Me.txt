@@ -1,0 +1,185 @@
+﻿Kuberntese is typically complex to run at local but its comparatively easy to run at Azure.
+Locally we can use docker compose orchestrator and in test or prod we can use kuberntese.
+
+To use kuberntese in Azure, we need to deploy our images to Azure Container Registry (not in docker hub, dont want to make it public that;s why)
+
+Azure Kuberntese is very compatible with Azure Container Registry that is why we deploy our images to ACR.
+
+In Azure portal - Create Container Registry with new resource group.
+
+Once we create Container Registry, we will get URL and to that we push and pull the images, push pull process is same like how we were doing it to docker hub
+
+So after creating container registry, we get URL - azurekubertntesedemo.azurecr.io
+
+Observe the Access Key menu in Container registry.
+
+Like from Docker HUB , to push the images we were following some naming convention like anandprakashdubey/imagename. So as in Azure Container Registry, we need to follow some 
+naming convention.
+
+Use container registry server name, which is "azurekubertntesedemo.azurecr.io" in our case.
+
+Observe docker images by command "docker images"
+
+So instead of adding tags to existing docker images, we can put instructions in docker-compose.yml file because we are using docker compose now, in image attribute change the image name.
+
+version: '3.4'
+
+services:
+  pluralsightmoviestore.client:
+    image: azurekubertntesedemo.azurecr.io/pluralsightmoviestoreclient                <--------------------- like this.
+    build:
+      context: .
+      dockerfile: PluralsightMovieStore.Client/Dockerfile
+    depends_on: 
+        - "pluralsightpricing.api"
+  pluralsightpricing.api:
+    image: azurekubertntesedemo.azurecr.io/pluralsightpricingapi					  <--------------------- like this.
+    build:
+      context: .
+      dockerfile: PluralsightPricing.API/Dockerfile
+
+
+Before we save this file, choose the solution mode to release from debug, so image will be release mode.
+
+After that , execute the docker image command , name of image will change as per given instructions, like below, observe latest
+
+C:\Users\anand>docker images
+REPOSITORY                                                    TAG               IMAGE ID       CREATED         SIZE
+azurekubertntesedemo.azurecr.io/pluralsightmoviestoreclient   latest            bb133dd46a0a   4 seconds ago   213MB
+azurekubertntesedemo.azurecr.io/pluralsightpricingapi         latest            921ef43ba654   7 seconds ago   208MB
+azurekubertntesedemo.azurecr.io/pluralsightmoviestoreclient   dev               1d1c4703b54e   2 days ago      208MB
+pluralsightmoviestoreclient                                   dev               1d1c4703b54e   2 days ago      208MB
+azurekubertntesedemo.azurecr.io/pluralsightpricingapi         dev               62094c0844e3   2 days ago      208MB
+pluralsightpricingapi                                         dev               62094c0844e3   2 days ago      208MB
+mcr.microsoft.com/dotnet/core/aspnet                          3.1-buster-slim   dd0cb488d08f   4 days ago      208MB
+
+C:\Users\anand>
+
+
+after that execute the docker push command as below - 
+
+>> docker push azurekubertntesedemo.azurecr.io/pluralsightmoviestoreclient:latest
+>> docker push azurekubertntesedemo.azurecr.io/pluralsightpricingapi:latest
+
+we hit error , authentication required
+
+install Azure CLI and do login and try again the above code from Azure CLI,
+
+we can check the azure container registry list from CLI , by "az acr list" command
+
+and after that , we need to login that azure container registry by this command ---> "az acr login --name AzureKubertnteseDemo"
+
+C:\Users\anand>az acr login --name AzureKubertnteseDemo
+Uppercase characters are detected in the registry name. When using its server url in docker commands, to avoid authentication errors, use all lowercase.
+Login Succeeded
+
+C:\Users\anand>
+
+
+
+After login, push the docker images via same above command - 
+
+C:\Users\anand>docker push azurekubertntesedemo.azurecr.io/pluralsightmoviestoreclient:latest
+The push refers to repository [azurekubertntesedemo.azurecr.io/pluralsightmoviestoreclient]
+341de7601d98: Pushed
+5f70bf18a086: Pushed
+627aff2963f7: Pushed
+f96ed06de775: Pushed
+3fe41572103a: Pushed
+bddb92d57f36: Pushed
+6661d3e4658a: Pushed
+764055ebc9a7: Pushed
+latest: digest: sha256:88b835b6233892eb081c9b2fbca0fa9156a47db421c65611437fd654689dcf44 size: 1999
+
+C:\Users\anand>docker push azurekubertntesedemo.azurecr.io/pluralsightpricingapi:latest
+The push refers to repository [azurekubertntesedemo.azurecr.io/pluralsightpricingapi]
+85ed2538bed2: Pushed
+5f70bf18a086: Mounted from pluralsightmoviestoreclient
+627aff2963f7: Mounted from pluralsightmoviestoreclient
+f96ed06de775: Mounted from pluralsightmoviestoreclient
+3fe41572103a: Mounted from pluralsightmoviestoreclient
+bddb92d57f36: Mounted from pluralsightmoviestoreclient
+6661d3e4658a: Mounted from pluralsightmoviestoreclient
+764055ebc9a7: Mounted from pluralsightmoviestoreclient
+latest: digest: sha256:a517aab6d4b3e9c2f1d17c92a4293070b73431f8922ffc3baefa133ea8819d45 size: 1997
+
+C:\Users\anand>
+
+
+
+Check the azure container registry --> repository section in Azure portal , we will the push repository
+
+*********************************************************************************************************************************************************************
+
+<----------Now kuberntese part ---------->
+
+POD -> 	the basic execution unit of a kuberntese application. basically pods contains --- > docker container, storage, ip address, and additional config and other resources
+Node --> A virtual or physical machine that contains the services necessary to PODs.
+Control Plane -- > PODS are managed by control plane, the container orchestration layer that exposes the API and interfaces to define, deploy and manage the lifecycle of containers.
+Cluster--> A sets of nodes that runs containerized application.
+
+*** Creating Azure kuberntese Service Cluster****
+
+In Azure portal search for kuberntese services and click on create.
+While creating Azure Kubernetes service, select same resource group and give proper name, on integration tab, select our newly created azure container registry.
+
+After create Kubernetes service, we use kubectl ( kuberntes command line tool) for orchestration.
+
+>> kubectl
+
+first thing we will connect kubectl to our azure kuberntes cluster by running following command. 
+
+>> az aks get-credentials --resource-group RG_AzureKubernteseDemo --name KSAzureKuberneteseDemo               < --name is kuberntes cluster name)
+
+>> kubectl get nodes   (get nodes )
+
+For Eg: - 
+
+C:\Users\anand>az aks get-credentials --resource-group RG_AzureKubernteseDemo --name KSAzureKuberneteseDemo
+Merged "KSAzureKuberneteseDemo" as current context in C:\Users\anand\.kube\config
+
+C:\Users\anand>kubectl get nodes
+NAME                                STATUS   ROLES   AGE    VERSION
+aks-agentpool-39898683-vmss000000   Ready    agent   2m8s   v1.19.11
+
+C:\Users\anand>
+
+To Create a deployment, we need to ad YAML manifest file in our Client App, deployment is a desired state of cluster.
+
+Right click and add orchestation support and select kubernetes/heml, it generate to yml file in Client UI app.
+
+Refer the demodeployment.yml file at solution level, it has all the instructions for web and api.
+
+to deploy, open the CMD and go the solution folder and use kubectl apply command as mentioned below. this command parse the manifest file and create kuberntes objects.
+
+D:\DockerBasedApplication\DockerCompose>kubectl apply -f demodeployment.yaml
+deployment.apps/pluralsightpricingapi created
+service/pluralsightpricingapi created
+deployment.apps/pluralsightmoviestoreclient created
+service/pluralsightmoviestoreclient created
+
+D:\DockerBasedApplication\DockerCompose>
+
+
+To get all newly created pods - run command as below 
+
+D:\DockerBasedApplication\DockerCompose>kubectl get pods -o wide
+NAME                                          READY   STATUS    RESTARTS   AGE   IP            NODE                                NOMINATED NODE   READINESS GATES
+pluralsightmoviestoreclient-94688d777-hpczf   1/1     Running   0          64s   10.244.0.10   aks-agentpool-39898683-vmss000000   <none>           <none>
+pluralsightpricingapi-84b45fdd45-jd5gt        1/1     Running   0          64s   10.244.0.9    aks-agentpool-39898683-vmss000000   <none>           <none>
+
+D:\DockerBasedApplication\DockerCompose>
+
+
+To get deployed services, run command as below
+
+D:\DockerBasedApplication\DockerCompose>kubectl get services
+NAME                          TYPE           CLUSTER-IP    EXTERNAL-IP     PORT(S)        AGE
+kubernetes                    ClusterIP      10.0.0.1      <none>          443/TCP        35m
+pluralsightmoviestoreclient   LoadBalancer   10.0.24.141   40.88.232.246   80:31966/TCP   2m18s
+pluralsightpricingapi         LoadBalancer   10.0.53.150   40.88.232.215   80:31015/TCP   2m19s
+
+D:\DockerBasedApplication\DockerCompose>
+
+
+To make api url also public updated the demodeployment.yaml file .
